@@ -233,7 +233,7 @@ class yii2fullcalendar extends elWidget
             $assets->googleCalendar = $this->googleCalendar;
         }
 
-        $js = array();
+        $js = [];
 
         if($this->ajaxEvents != NULL){
             $this->clientOptions['events'] = $this->ajaxEvents;
@@ -242,6 +242,11 @@ class yii2fullcalendar extends elWidget
 	if(!is_null($this->contentHeight) && !isset($this->clientOptions['contentHeight']))
         {
             $this->clientOptions['contentHeight'] = $this->contentHeight;
+        }
+
+        if(isset($this->customButtons) && !isset($this->clientOptions['customButtons']))
+        {
+            $this->clientOptions['customButtons'] = $this->customButtons;
         }
 
         if(is_array($this->header) && isset($this->clientOptions['header']))
@@ -256,13 +261,21 @@ class yii2fullcalendar extends elWidget
             $this->clientOptions['defaultView'] = $this->defaultView;
         }
 
+        $this->defineLocal($assets);
+
         // clear existing calendar display before rendering new fullcalendar instance
         // this step is important when using the fullcalendar widget with pjax
         $js[] = "var loading_container = jQuery('#$id .fc-loading');"; // take backup of loading container
         $js[] = "jQuery('#$id').empty().append(loading_container);"; // remove/empty the calendar container and append loading container bakup
 
         $cleanOptions = $this->getClientOptions();
-        $js[] = "jQuery('#$id').fullCalendar($cleanOptions);";
+        //$js[] = "jQuery('#$id').fullCalendar($cleanOptions);";
+
+        $js[] = "var calendarEl = document.getElementById('$id');";
+        //$js[] = "alert('$id');";
+        //$js[] = "var calendarEl = jQuery('#$id');";
+        $js[] = "var calendar = new FullCalendar.Calendar(calendarEl,$cleanOptions);";
+        $js[] = "calendar.render();";
 
         /**
         * Loads events separately from the calendar creation. Uncomment if you need this functionality.
@@ -325,6 +338,9 @@ class yii2fullcalendar extends elWidget
         if ($this->eventClick){
             $options['eventClick'] = new JsExpression($this->eventClick);
         }
+        if ($this->dateClick){
+            $options['dateClick'] = new JsExpression($this->dateClick);
+        }
 
         if (is_array($this->events) || is_string($this->events)){
             $options['events'] = $this->events;
@@ -332,6 +348,14 @@ class yii2fullcalendar extends elWidget
 
         $options = array_merge($options, $this->clientOptions);
         return Json::encode($options);
+    }
+
+    // define language of calendar
+    protected function defineLocal($assets){
+        $language = $assets->language ? $assets->language : Yii::$app->language;
+        $tmp = explode('-', $language);
+        $locale = strtolower($tmp[0]);//it; en;etc...
+        $this->clientOptions['locale'] = [$locale];
     }
 
 }
