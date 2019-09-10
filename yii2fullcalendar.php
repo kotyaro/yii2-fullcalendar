@@ -225,7 +225,7 @@ class yii2fullcalendar extends elWidget
             ThemeAsset::register($view);
         }
 	
-	if (array_key_exists('defaultView',$this->clientOptions) && ($this->clientOptions['defaultView'] == 'timelineDay' || $this->clientOptions['defaultView'] == 'timelineWeek' || $this->clientOptions['defaultView'] == 'timelineMonth' || $this->clientOptions['defaultView'] == 'agendaDay'))
+	    if (array_key_exists('defaultView',$this->clientOptions) && ($this->clientOptions['defaultView'] == 'timelineDay' || $this->clientOptions['defaultView'] == 'timelineWeek' || $this->clientOptions['defaultView'] == 'timelineMonth' || $this->clientOptions['defaultView'] == 'agendaDay'))
         {
             SchedulerAsset::register($view);
         }    
@@ -240,13 +240,13 @@ class yii2fullcalendar extends elWidget
             $assets->googleCalendar = $this->googleCalendar;
         }
 
-        $js = array();
+        $js = [];
 
         if($this->ajaxEvents != NULL){
             $this->clientOptions['events'] = $this->ajaxEvents;
         }
 	    
-	if(!is_null($this->contentHeight) && !isset($this->clientOptions['contentHeight']))
+	    if(!is_null($this->contentHeight) && !isset($this->clientOptions['contentHeight']))
         {
             $this->clientOptions['contentHeight'] = $this->contentHeight;
         }
@@ -268,13 +268,20 @@ class yii2fullcalendar extends elWidget
             $this->clientOptions['defaultView'] = $this->defaultView;
         }
 
+        $this->defineLocal($assets);
+
+
         // clear existing calendar display before rendering new fullcalendar instance
         // this step is important when using the fullcalendar widget with pjax
         $js[] = "var loading_container = jQuery('#$id .fc-loading');"; // take backup of loading container
         $js[] = "jQuery('#$id').empty().append(loading_container);"; // remove/empty the calendar container and append loading container bakup
 
         $cleanOptions = $this->getClientOptions();
-        $js[] = "jQuery('#$id').fullCalendar($cleanOptions);";
+        $js[] = "var calendarEl = document.getElementById('$id');";
+        //$js[] = "alert('$id');";
+        //$js[] = "var calendarEl = jQuery('#$id');";
+        $js[] = "var calendar = new FullCalendar.Calendar(calendarEl,$cleanOptions);";
+        $js[] = "calendar.render();";
 
         /**
         * Loads events separately from the calendar creation. Uncomment if you need this functionality.
@@ -348,5 +355,15 @@ class yii2fullcalendar extends elWidget
         $options = array_merge($options, $this->clientOptions);
         return Json::encode($options);
     }
+
+
+    // define language of calendar
+    protected function defineLocal($assets){
+        $language = $assets->language ? $assets->language : Yii::$app->language;
+        $tmp = explode('-', $language);
+        $locale = strtolower($tmp[0]);//it; en;etc...
+        $this->clientOptions['locale'] = [$locale];
+    }
+
 
 }
