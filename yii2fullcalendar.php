@@ -47,6 +47,7 @@ class yii2fullcalendar extends elWidget
     public $clientOptions = [
         'weekends' => true,
         'editable' => false,
+        'aspectRatio' => 1.35
     ];
 
     /**
@@ -60,6 +61,12 @@ class yii2fullcalendar extends elWidget
     * @todo add the event class and write docs
     **/
     public $events = [];
+
+    /**
+     * Add custom buttons to the calendar header
+     * @var array customButtons
+     */
+    public $customButtons = [];
 
     /**
      * Define the look n feel for the calendar header, known placeholders are left, center, right
@@ -154,9 +161,9 @@ class yii2fullcalendar extends elWidget
 
     /**
      * A js callback that triggered when the user clicks an day.
-     * @var string the javascript code that implements the dateClick function
+     * @var string the javascript code that implements the dayClick function
      */
-    public $dateClick = "";
+    public $dayClick = "";
 
     /**
      * A js callback that will fire after a selection is made.
@@ -218,7 +225,7 @@ class yii2fullcalendar extends elWidget
             ThemeAsset::register($view);
         }
 	
-	if (array_key_exists('defaultView',$this->clientOptions) && ($this->clientOptions['defaultView'] == 'timelineDay' || $this->clientOptions['defaultView'] == 'agendaDay'))
+	if (array_key_exists('defaultView',$this->clientOptions) && ($this->clientOptions['defaultView'] == 'timelineDay' || $this->clientOptions['defaultView'] == 'timelineWeek' || $this->clientOptions['defaultView'] == 'timelineMonth' || $this->clientOptions['defaultView'] == 'agendaDay'))
         {
             SchedulerAsset::register($view);
         }    
@@ -233,7 +240,7 @@ class yii2fullcalendar extends elWidget
             $assets->googleCalendar = $this->googleCalendar;
         }
 
-        $js = [];
+        $js = array();
 
         if($this->ajaxEvents != NULL){
             $this->clientOptions['events'] = $this->ajaxEvents;
@@ -261,21 +268,13 @@ class yii2fullcalendar extends elWidget
             $this->clientOptions['defaultView'] = $this->defaultView;
         }
 
-        $this->defineLocal($assets);
-
         // clear existing calendar display before rendering new fullcalendar instance
         // this step is important when using the fullcalendar widget with pjax
         $js[] = "var loading_container = jQuery('#$id .fc-loading');"; // take backup of loading container
         $js[] = "jQuery('#$id').empty().append(loading_container);"; // remove/empty the calendar container and append loading container bakup
 
         $cleanOptions = $this->getClientOptions();
-        //$js[] = "jQuery('#$id').fullCalendar($cleanOptions);";
-
-        $js[] = "var calendarEl = document.getElementById('$id');";
-        //$js[] = "alert('$id');";
-        //$js[] = "var calendarEl = jQuery('#$id');";
-        $js[] = "var calendar = new FullCalendar.Calendar(calendarEl,$cleanOptions);";
-        $js[] = "calendar.render();";
+        $js[] = "jQuery('#$id').fullCalendar($cleanOptions);";
 
         /**
         * Loads events separately from the calendar creation. Uncomment if you need this functionality.
@@ -338,8 +337,8 @@ class yii2fullcalendar extends elWidget
         if ($this->eventClick){
             $options['eventClick'] = new JsExpression($this->eventClick);
         }
-        if ($this->dateClick){
-            $options['dateClick'] = new JsExpression($this->dateClick);
+        if ($this->dayClick){
+            $options['dayClick'] = new JsExpression($this->dayClick);
         }
 
         if (is_array($this->events) || is_string($this->events)){
@@ -348,14 +347,6 @@ class yii2fullcalendar extends elWidget
 
         $options = array_merge($options, $this->clientOptions);
         return Json::encode($options);
-    }
-
-    // define language of calendar
-    protected function defineLocal($assets){
-        $language = $assets->language ? $assets->language : Yii::$app->language;
-        $tmp = explode('-', $language);
-        $locale = strtolower($tmp[0]);//it; en;etc...
-        $this->clientOptions['locale'] = [$locale];
     }
 
 }
