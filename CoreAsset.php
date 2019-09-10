@@ -41,7 +41,8 @@ class CoreAsset extends AssetBundle
      * @var array
      */
     public $css = [
-        'fullcalendar.min.css',
+        'core/main.min.css',
+        'daygrid/main.min.css'
     ];
 
     /**
@@ -49,8 +50,10 @@ class CoreAsset extends AssetBundle
      * @var array
      */
     public $js = [
-        'fullcalendar.js',        
-        'locale-all.js',
+        'core/main.js',
+        'daygrid/main.js',
+        'interaction/main.js',        
+        //'locale-all.js',
     ];
     
     /**
@@ -58,9 +61,7 @@ class CoreAsset extends AssetBundle
      * @var array
      */
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii2fullcalendar\MomentAsset',
-        'yii2fullcalendar\PrintAsset'
+        'yii\web\YiiAsset'                
     ];
 
     /**
@@ -69,10 +70,9 @@ class CoreAsset extends AssetBundle
     public function registerAssetFiles($view)
     {
         $language = $this->language ? $this->language : Yii::$app->language;
-        if (strtoupper($language) != 'EN-US') 
-        {
-            $this->js[] = "locale/{$language}.js";
-        }
+        $tmp = explode('-', $language);
+        $locale = strtolower($tmp[0]).'.js';//it; en;etc...
+        $this->js[] = "core/locales/".$locale;
 
         /* if($this->googleCalendar)
         {

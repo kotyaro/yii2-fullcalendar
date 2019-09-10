@@ -20,8 +20,7 @@
 	},
 	"require": {
         "php": ">=7.1.0",
-		"yiisoft/yii2" : "*",
-		"yiisoft/yii2-jui" : "*",
+		"yiisoft/yii2" : "^2.0@dev",
 		"bower-asset/fullcalendar" : "^4.0.2@stable",
 		"bower-asset/fullcalendar-scheduler" : "^4.0.2@stable"
 	},
