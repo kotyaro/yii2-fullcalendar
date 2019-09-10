@@ -53,7 +53,7 @@ class yii2fullcalendar extends elWidget
     /**
      * @var string defaultView will define which view renderer will initially be used for displaying calendar events
      */
-    public $defaultView = 'month';
+    public $defaultView = 'dayGridMonth';
 
     /**
     * Holds an array of Event Objects
