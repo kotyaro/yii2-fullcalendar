@@ -153,6 +153,12 @@ class yii2fullcalendar extends elWidget
     public $eventClick = "";
 
     /**
+     * A js callback that triggered when the user clicks an day.
+     * @var string the javascript code that implements the dateClick function
+     */
+    public $dateClick = "";
+
+    /**
      * A js callback that will fire after a selection is made.
      * @var string the javascript code that implements the select function
      */
