@@ -74,10 +74,10 @@ class CoreAsset extends AssetBundle
             $this->js[] = "locale/{$language}.js";
         }
 
-        if($this->googleCalendar)
+        /* if($this->googleCalendar)
         {
             $this->js[] = 'gcal.js';
-        }
+        } */
 
         parent::registerAssetFiles($view);
     }
