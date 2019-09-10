@@ -1,6 +1,6 @@
 <?php
 
-namespace yii2fullcalendar\models;
+namespace paskuale75\yii2fullcalendar\models;
 
 use yii\base\Model;
 

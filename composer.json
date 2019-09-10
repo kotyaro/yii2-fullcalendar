@@ -27,6 +27,6 @@
 		"codeception/codeception": "*"
 	},
 	"autoload": {
-		"psr-4": { "yii2fullcalendar\\": "" }
+		"psr-4": { "paskuale\\yii2fullcalendar\\": "" }
 	}
 }

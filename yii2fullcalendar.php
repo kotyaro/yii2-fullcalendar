@@ -2,13 +2,13 @@
 
  /**
  * This class is used to embed FullCalendar JQuery Plugin to my Yii2 Projects
- * @copyright Frenzel GmbH - www.frenzel.net
- * @link http://www.frenzel.net
- * @author Philipp Frenzel <philipp@frenzel.net>
+ * @copyright Paskuale - www.paskuale.it
+ * @link http://www.paskuale.it
+ * @author Pasquale Pellicani <pellicanipasquale@gmail.com>
  *
  */
 
-namespace yii2fullcalendar;
+namespace paskuale75\yii2fullcalendar;
 
 use Yii;
 use yii\web\View;
