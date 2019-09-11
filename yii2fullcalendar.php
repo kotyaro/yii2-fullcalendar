@@ -163,7 +163,7 @@ class yii2fullcalendar extends elWidget
      * A js callback that triggered when the user clicks an day.
      * @var string the javascript code that implements the dayClick function
      */
-    public $dayClick = "";
+    public $dateClick = "";
 
     /**
      * A js callback that will fire after a selection is made.
@@ -344,8 +344,8 @@ class yii2fullcalendar extends elWidget
         if ($this->eventClick){
             $options['eventClick'] = new JsExpression($this->eventClick);
         }
-        if ($this->dayClick){
-            $options['dayClick'] = new JsExpression($this->dayClick);
+        if ($this->dateClick){
+            $options['dateClick'] = new JsExpression($this->dateClick);
         }
 
         if (is_array($this->events) || is_string($this->events)){
